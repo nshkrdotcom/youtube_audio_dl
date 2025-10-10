@@ -1,0 +1,99 @@
+# The directory Mix will write compiled artifacts to.
+/_build/
+
+# If you run "mix test --cover", coverage assets end up here.
+/cover/
+
+# The directory Mix downloads your dependencies sources to.
+/deps/
+
+# Where third-party dependencies like ExDoc output generated docs.
+/doc/
+
+# If the VM crashes, it generates a dump, let's ignore it too.
+erl_crash.dump
+
+# Also ignore archive artifacts (built via "mix archive.build").
+*.ez
+
+# Ignore package tarball (built via "mix hex.build").
+youtube_audio_dl-*.tar
+
+# Temporary files, for example, from tests.
+/tmp/
+
+# Downloaded audio files
+/downloads/
+
+# Temporary download files
+*.part
+*.ytdl
+*.webm
+*.m4a
+*.opus
+*.wav
+
+# Audio test files at root
+/*.mp3
+
+# Generated chop detection output files
+/*_chops.txt
+/chop_points*.txt
+/kick_*.txt
+
+
+ml_env/
+
+
+audacity_export/
+
+drum_chops/
+
+# C++ build artifacts
+*.o
+*.obj
+*.a
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exe
+*.out
+
+# CMake
+build/
+cmake-build-*/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Elixir LSP
+.elixir_ls/
+.lexical/
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Compiled C++ executables (simple_filter directory)
+simple_filter/filter
+simple_filter/onset_detector
+simple_filter/normalize
+simple_filter/pipeline_demo
+simple_filter/dsp
+simple_filter/*.wav
+simple_filter/*.txt

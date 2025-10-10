@@ -1,0 +1,200 @@
+╔═══════════════════════════════════════════════════════════════╗
+║          DSP PIPELINE DEMO - FILTER STAGES GUIDE              ║
+╔═══════════════════════════════════════════════════════════════╝
+
+All 13 files are 15-second drum loops with different filters applied.
+Listen to each one to hear how the filters affect the sound.
+
+═══════════════════════════════════════════════════════════════
+
+ORIGINAL & REFERENCE
+═══════════════════════════════════════════════════════════════
+
+01_original.wav
+  • Unprocessed mono conversion of the stereo source
+  • Full frequency range (20 Hz - 20 kHz)
+  • Use this as your reference to compare all other files
+
+═══════════════════════════════════════════════════════════════
+
+CLEANING FILTERS (SUBTLE)
+═══════════════════════════════════════════════════════════════
+
+02_highpass_40hz.wav
+  • Removes sub-bass rumble below 40 Hz
+  • Sounds almost identical to original
+  • Useful for removing DC offset and room rumble
+
+03_lowpass_15khz.wav
+  • Removes ultra-high frequencies above 15 kHz
+  • Slightly less "air" and sizzle
+  • Removes tape hiss and noise
+
+13_combined_clean.wav
+  • Both filters: HPF 40 Hz + LPF 12 kHz
+  • Broadcast/radio quality sound
+  • Clean and focused, removes extremes
+
+═══════════════════════════════════════════════════════════════
+
+FREQUENCY ISOLATION (BANDPASS)
+═══════════════════════════════════════════════════════════════
+
+04_bandpass_kick.wav (60-200 Hz)
+  • ONLY the kick drum fundamental frequency
+  • Deep, boomy, sub-bass
+  • Everything else filtered out
+  • Listen: You'll hear JUST the low "thump" of kicks
+
+05_bandpass_snare.wav (800-3000 Hz)
+  • ONLY the snare drum crack/body
+  • Mid-range frequencies
+  • No bass, no high sizzle
+  • Listen: Snare hits sound hollow and nasal
+
+06_bandpass_hihat.wav (5000-15000 Hz)
+  • ONLY hi-hats, cymbals, and stick clicks
+  • High frequencies only
+  • No bass or body at all
+  • Listen: Sounds like radio static with rhythm
+
+═══════════════════════════════════════════════════════════════
+
+CREATIVE LOWPASS FILTERS (PROGRESSIVE DARKENING)
+═══════════════════════════════════════════════════════════════
+
+Listen to these in order (7 → 8 → 9 → 10) to hear the frequency
+spectrum gradually opening up:
+
+07_lowpass_800hz.wav
+  • Extreme lowpass - VERY dark and muffled
+  • Only kick and low-end body remain
+  • Snare crack is gone, hi-hats disappear
+  • Effect: Underwater, pillow over speaker
+  • Use: Extreme lofi, telephone, heavy filtering
+
+08_lowpass_1200hz.wav
+  • Telephone/AM radio quality
+  • Some snare body comes through
+  • Still very muffled
+  • Effect: Old recording, vintage sound
+  • Use: Lofi beats, retro aesthetic
+
+09_lowpass_3000hz.wav
+  • Muffled but recognizable
+  • Snare crack audible but dull
+  • No hi-hat sizzle or cymbal shimmer
+  • Effect: Sound from another room
+  • Use: Warm/dark drums, remove harshness
+
+10_lowpass_6000hz.wav
+  • Slightly dark/warm
+  • Most of the drum sound intact
+  • Just the top-end "air" removed
+  • Effect: Gentle warmth, analog feel
+  • Use: Smooth out digital harshness
+
+═══════════════════════════════════════════════════════════════
+
+CREATIVE HIGHPASS FILTERS (REMOVING LOW END)
+═══════════════════════════════════════════════════════════════
+
+11_highpass_200hz.wav
+  • Removes kick drum fundamental
+  • Snare and hi-hats remain
+  • Thin but still has body
+  • Effect: Kick becomes a "click" instead of "thump"
+  • Use: Layer with different bass, make room in mix
+
+12_highpass_1000hz.wav
+  • Extreme highpass - removes ALL low end
+  • Only stick attacks and cymbal sizzle
+  • Sounds tinny and thin
+  • Effect: Transistor radio, walkie-talkie
+  • Use: Special effects, texture layers
+
+═══════════════════════════════════════════════════════════════
+
+FILTER CHARACTERISTICS
+═══════════════════════════════════════════════════════════════
+
+All filters are 4-pole Butterworth (24 dB/octave rolloff):
+
+• VERY steep cutoff - frequencies are removed aggressively
+• Maximally flat passband - no resonance or ringing
+• Phase shift - introduces slight timing differences
+
+Bandpass filters combine HPF + LPF to isolate a frequency band.
+
+═══════════════════════════════════════════════════════════════
+
+HOW TO LISTEN
+═══════════════════════════════════════════════════════════════
+
+From Windows Explorer:
+  \\wsl.localhost\Ubuntu\home\home\p\g\n\elixir_tube\youtube_audio_dl\simple_filter_demos
+
+Recommended listening order:
+
+1. START: 01_original.wav (reference)
+
+2. ISOLATION EXERCISE:
+   - 04_bandpass_kick.wav (kick only)
+   - 05_bandpass_snare.wav (snare only)
+   - 06_bandpass_hihat.wav (hi-hat only)
+   Notice how the three bands cover different instruments!
+
+3. PROGRESSIVE DARKENING:
+   - 10_lowpass_6000hz.wav (slightly dark)
+   - 09_lowpass_3000hz.wav (muffled)
+   - 08_lowpass_1200hz.wav (telephone)
+   - 07_lowpass_800hz.wav (extreme lofi)
+   Notice each step removes more high frequency
+
+4. REMOVING BASS:
+   - 11_highpass_200hz.wav (no kick thump)
+   - 12_highpass_1000hz.wav (only highs)
+
+5. PRACTICAL USE:
+   - 13_combined_clean.wav (broadcast quality)
+   - 02_highpass_40hz.wav (subtle cleaning)
+
+═══════════════════════════════════════════════════════════════
+
+OBSERVATIONS TO MAKE
+═══════════════════════════════════════════════════════════════
+
+When listening, notice:
+
+✓ How much of a drum's "sound" is in different frequency ranges
+✓ The kick is mostly sub-bass (60-200 Hz)
+✓ The snare "crack" is mid-range (800-3000 Hz)
+✓ Hi-hats are pure high frequency (5-15 kHz)
+✓ Lowpass filters make everything sound "darker" and "warmer"
+✓ Highpass filters make everything sound "thinner" and "tinnier"
+✓ Extreme filtering can create interesting textures
+
+═══════════════════════════════════════════════════════════════
+
+TECHNICAL SPECS
+═══════════════════════════════════════════════════════════════
+
+Format:     16-bit PCM WAV, mono, 48000 Hz
+Duration:   15 seconds each
+File size:  ~1.4 MB each (18 MB total)
+Processing: 4-pole Butterworth IIR filters
+Rolloff:    24 dB/octave (very steep)
+
+═══════════════════════════════════════════════════════════════
+
+REGENERATE DEMOS
+═══════════════════════════════════════════════════════════════
+
+To create these files from a different audio source:
+
+  cd simple_filter
+  ./pipeline_demo path/to/your_audio.wav
+
+All 13 filtered versions will be saved to simple_filter_demos/
+
+═══════════════════════════════════════════════════════════════

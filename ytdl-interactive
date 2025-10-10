@@ -1,0 +1,265 @@
+#!/usr/bin/env bash
+
+# YouTube Audio Downloader - Interactive Mode
+# Better UX with menus and prompts
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+MAGENTA='\033[0;35m'
+NC='\033[0m'
+
+clear
+
+# Main menu
+show_main_menu() {
+    clear
+    echo -e "${CYAN}"
+    cat << "EOF"
+    ╔═══════════════════════════════════════════════════════════╗
+    ║                                                           ║
+    ║        🎵 YouTube Audio Downloader - Interactive 🎵        ║
+    ║                                                           ║
+    ╚═══════════════════════════════════════════════════════════╝
+EOF
+    echo -e "${NC}"
+
+    echo -e "${GREEN}What would you like to do?${NC}\n"
+    echo -e "  ${CYAN}1${NC}) 🎭  ${YELLOW}Browse genres${NC}"
+    echo -e "  ${CYAN}2${NC}) 📥  ${YELLOW}Download by genre${NC}"
+    echo -e "  ${CYAN}3${NC}) 🔍  ${YELLOW}Search custom query${NC}"
+    echo -e "  ${CYAN}4${NC}) 🔗  ${YELLOW}Download from URL${NC}"
+    echo -e "  ${CYAN}5${NC}) 📊  ${YELLOW}View cache statistics${NC}"
+    echo -e "  ${CYAN}6${NC}) 🧹  ${YELLOW}Clear cache${NC}"
+    echo -e "  ${CYAN}7${NC}) ❓  ${YELLOW}Help & Documentation${NC}"
+    echo -e "  ${CYAN}0${NC}) 🚪  ${YELLOW}Exit${NC}"
+    echo ""
+    echo -e -n "${GREEN}Enter choice [0-7]:${NC} "
+}
+
+# Browse genres menu
+browse_menu() {
+    clear
+    echo -e "${CYAN}═══════════════════════════════════════════════${NC}"
+    echo -e "${CYAN}           🎭 Browse Music Genres${NC}"
+    echo -e "${CYAN}═══════════════════════════════════════════════${NC}\n"
+
+    echo -e "${YELLOW}Quick picks:${NC}"
+    echo -e "  ${CYAN}1${NC}) Lofi      ${CYAN}5${NC}) Rock        ${CYAN}9${NC})  Ambient"
+    echo -e "  ${CYAN}2${NC}) Jazz      ${CYAN}6${NC}) Metal       ${CYAN}10${NC}) Study"
+    echo -e "  ${CYAN}3${NC}) Classical ${CYAN}7${NC}) Electronic  ${CYAN}11${NC}) Sleep"
+    echo -e "  ${CYAN}4${NC}) Synthwave ${CYAN}8${NC}) Hip Hop     ${CYAN}12${NC}) Chill"
+    echo ""
+    echo -e "  ${CYAN}99${NC}) 📋 Show all 104 genres"
+    echo -e "  ${CYAN}0${NC})  ← Back"
+    echo ""
+    echo -e -n "${GREEN}Choose genre or enter custom name:${NC} "
+    read genre_choice
+
+    case "$genre_choice" in
+        1) genre="lofi" ;;
+        2) genre="jazz" ;;
+        3) genre="classical" ;;
+        4) genre="synthwave" ;;
+        5) genre="rock" ;;
+        6) genre="metal" ;;
+        7) genre="edm" ;;
+        8) genre="hip_hop" ;;
+        9) genre="ambient" ;;
+        10) genre="study" ;;
+        11) genre="sleep" ;;
+        12) genre="chill" ;;
+        99) ./ytdl genres; read -p "Press enter to continue..."; return ;;
+        0) return ;;
+        *) genre="$genre_choice" ;;
+    esac
+
+    if [[ -n "$genre" ]]; then
+        echo ""
+        echo -e "${GREEN}How many results?${NC} [default: 5]"
+        read -p "> " limit
+        limit=${limit:-5}
+
+        echo -e "${GREEN}Max duration (seconds)?${NC} [leave empty for no limit, 600=10min]"
+        read -p "> " max_dur
+
+        local cmd="./ytdl browse $genre $limit"
+        [[ -n "$max_dur" ]] && cmd="$cmd --max-duration $max_dur"
+
+        echo ""
+        $cmd
+        echo ""
+        read -p "Press enter to continue..."
+    fi
+}
+
+# Download menu
+download_menu() {
+    clear
+    echo -e "${CYAN}═══════════════════════════════════════════════${NC}"
+    echo -e "${CYAN}           📥 Download Music${NC}"
+    echo -e "${CYAN}═══════════════════════════════════════════════${NC}\n"
+
+    echo -e "${GREEN}Enter genre name:${NC} (e.g., lofi, jazz, rock)"
+    read -p "> " genre
+
+    if [[ -z "$genre" ]]; then
+        echo -e "${RED}Genre required!${NC}"
+        read -p "Press enter..."
+        return
+    fi
+
+    echo ""
+    echo -e "${GREEN}Download mode:${NC}"
+    echo -e "  ${CYAN}1${NC}) Single track (by index)"
+    echo -e "  ${CYAN}2${NC}) Multiple tracks (batch)"
+    read -p "> " mode
+
+    echo ""
+    local cmd=""
+
+    if [[ "$mode" == "1" ]]; then
+        echo -e "${GREEN}Which result index to download?${NC} [default: 1]"
+        read -p "> " index
+        index=${index:-1}
+        cmd="./ytdl download $genre --index $index"
+    else
+        echo -e "${GREEN}How many tracks to download?${NC}"
+        read -p "> " count
+        cmd="./ytdl download $genre --count $count"
+    fi
+
+    echo ""
+    echo -e "${GREEN}Max duration filter (seconds)?${NC} [empty=no limit, 600=10min, 900=15min]"
+    echo -e "${YELLOW}💡 Recommended: 600 to avoid long livestreams${NC}"
+    read -p "> " max_dur
+
+    [[ -n "$max_dur" ]] && cmd="$cmd --max-duration $max_dur"
+
+    echo ""
+    echo -e "${BLUE}Running: $cmd${NC}"
+    echo ""
+    $cmd
+    echo ""
+    read -p "Press enter to continue..."
+}
+
+# Search menu
+search_menu() {
+    clear
+    echo -e "${CYAN}═══════════════════════════════════════════════${NC}"
+    echo -e "${CYAN}           🔍 Search YouTube${NC}"
+    echo -e "${CYAN}═══════════════════════════════════════════════${NC}\n"
+
+    echo -e "${GREEN}Enter search query:${NC}"
+    read -p "> " query
+
+    if [[ -z "$query" ]]; then
+        echo -e "${RED}Query required!${NC}"
+        read -p "Press enter..."
+        return
+    fi
+
+    echo ""
+    echo -e "${GREEN}How many results?${NC} [default: 5]"
+    read -p "> " limit
+    limit=${limit:-5}
+
+    echo ""
+    echo -e "${GREEN}Max duration (seconds)?${NC} [empty=no limit]"
+    read -p "> " max_dur
+
+    local cmd="./ytdl search \"$query\" $limit"
+    [[ -n "$max_dur" ]] && cmd="$cmd --max-duration $max_dur"
+
+    echo ""
+    $cmd
+    echo ""
+    read -p "Press enter to continue..."
+}
+
+# URL download menu
+url_menu() {
+    clear
+    echo -e "${CYAN}═══════════════════════════════════════════════${NC}"
+    echo -e "${CYAN}           🔗 Download from URL${NC}"
+    echo -e "${CYAN}═══════════════════════════════════════════════${NC}\n"
+
+    echo -e "${GREEN}Enter YouTube URL:${NC}"
+    read -p "> " url
+
+    if [[ -z "$url" ]]; then
+        echo -e "${RED}URL required!${NC}"
+        read -p "Press enter..."
+        return
+    fi
+
+    echo ""
+    echo -e "${GREEN}Category for caching?${NC} [default: general]"
+    read -p "> " category
+    category=${category:-general}
+
+    echo ""
+    ./ytdl get "$url" --category "$category"
+    echo ""
+    read -p "Press enter to continue..."
+}
+
+# Help menu
+help_menu() {
+    clear
+    echo -e "${CYAN}═══════════════════════════════════════════════${NC}"
+    echo -e "${CYAN}           ❓ Help & Tips${NC}"
+    echo -e "${CYAN}═══════════════════════════════════════════════${NC}\n"
+
+    echo -e "${YELLOW}📚 Quick Tips:${NC}\n"
+    echo -e "  ${GREEN}•${NC} Always use ${YELLOW}max-duration filter${NC} to avoid long livestreams"
+    echo -e "  ${GREEN}•${NC} Recommended: ${YELLOW}--max-duration 600${NC} (10 minutes)"
+    echo -e "  ${GREEN}•${NC} Browse first, then download by index"
+    echo -e "  ${GREEN}•${NC} Downloads are cached - re-downloads are instant"
+    echo -e "  ${GREEN}•${NC} Use ${YELLOW}--force${NC} to re-download cached items"
+    echo ""
+    echo -e "${YELLOW}📖 Documentation:${NC}\n"
+    echo -e "  ${GREEN}•${NC} QUICK_START.md - Getting started guide"
+    echo -e "  ${GREEN}•${NC} TROUBLESHOOTING.md - Common issues"
+    echo -e "  ${GREEN}•${NC} CACHE_GUIDE.md - Cache management"
+    echo -e "  ${GREEN}•${NC} MUSIC_EXAMPLES.md - API examples"
+    echo ""
+    echo -e "${YELLOW}🕐 Duration Reference:${NC}\n"
+    echo -e "  ${CYAN}180${NC}  = 3 minutes    ${CYAN}900${NC}  = 15 minutes"
+    echo -e "  ${CYAN}300${NC}  = 5 minutes    ${CYAN}1800${NC} = 30 minutes"
+    echo -e "  ${CYAN}600${NC}  = 10 minutes"
+    echo ""
+    read -p "Press enter to continue..."
+}
+
+# Main loop
+while true; do
+    show_main_menu
+    read choice
+
+    case "$choice" in
+        1) browse_menu ;;
+        2) download_menu ;;
+        3) search_menu ;;
+        4) url_menu ;;
+        5) clear; ./ytdl cache; echo ""; read -p "Press enter to continue..." ;;
+        6) clear; ./ytdl clear; echo ""; read -p "Press enter to continue..." ;;
+        7) help_menu ;;
+        0)
+            clear
+            echo -e "${GREEN}Thanks for using YouTube Audio Downloader! 🎵${NC}"
+            exit 0
+            ;;
+        *)
+            echo -e "${RED}Invalid choice!${NC}"
+            sleep 1
+            ;;
+    esac
+done
