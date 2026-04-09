@@ -678,3 +678,7 @@ cd simple_filter
 🎵 **Happy downloading!** Remember to use `--max-duration` filters to avoid livestreams!
 
 🎚️ **Pro tip:** All DSP filters automatically normalize output for consistent volume!
+
+## License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
